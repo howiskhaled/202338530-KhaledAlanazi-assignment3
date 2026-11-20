@@ -4,17 +4,32 @@
 
 A static, single-page portfolio built with HTML, CSS and vanilla JavaScript. There is no framework, build step, backend or analytics. Open `index.html` directly or serve the project with a local HTTP server.
 
-Assignment 2 builds on the Assignment 1 site. The new work is described in [What is new in Assignment 2](#what-is-new-in-assignment-2); everything else is unchanged from Assignment 1.
+Assignment 3 builds on the Assignment 2 site (which built on Assignment 1). The new work is described in [What is new in Assignment 3](#what-is-new-in-assignment-3). The Assignment 2 features are documented after it and still work the same way.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Semantic page structure, project content, form and native dialogs |
+| `index.html` | Semantic page structure, project content, the visitor panel, the GitHub list, the form and native dialogs |
 | `css/styles.css` | Design tokens, responsive layouts, theme, motion and focus styles |
-| `js/i18n.js` | English/Arabic translations and the language switcher (loaded before `script.js`) |
-| `js/script.js` | Navigation, theme, motion, greeting, gallery, toolkit explorer, Wikipedia feature and form validation |
+| `js/i18n.js` | English/Arabic translations, the language switcher, and number, date and time formatting |
+| `js/state.js` | **New.** The shared store for visitor preferences (`window.portfolioState`) |
+| `js/script.js` | Shared helpers, navigation, theme, motion, greeting, gallery, toolkit explorer, Wikipedia feature and contact form |
+| `js/visitor.js` | **New.** Visitor panel: saved name, path by visitor type, visit timer and counter |
+| `js/github.js` | **New.** Live GitHub repositories: fetch, cache, group, filter and sort |
+| `assets/images/*.webp` | Profile photo and Mizanyti screenshots in WebP, plus 240 px versions for the phone collage |
 | `assets/images/liquid-light.svg` | Original vector atmosphere with displaced gradients and soft flowing folds |
-| `assets/fonts/InterVariable.woff2` | Locally hosted Inter variable font, with its SIL Open Font License in `OFL.txt` |
-| `assets/fonts/Tajawal-Regular.ttf`, `Tajawal-Light.ttf` | Locally hosted Arabic font, with its SIL Open Font License in `Tajawal-OFL.txt` |
+| `assets/fonts/Inter-Latin.woff2` | Inter variable font, subset to Latin characters, with its SIL Open Font License in `OFL.txt` |
+| `assets/fonts/Tajawal-Regular.woff2`, `Tajawal-Light.woff2` | Arabic font, subset to Arabic and Latin characters, with its SIL Open Font License in `Tajawal-OFL.txt` |
+
+### Script loading order
+
+All scripts use `defer`, so they run in this order after the HTML is parsed and never block the first paint:
+
+1. `i18n.js` defines `window.portfolioI18n`.
+2. `state.js` defines `window.portfolioState`.
+3. `script.js` sets up the shared names `i18n`, `store`, `motionPreference`, `playEntrance()` and `trustedUrl()`, then starts the Assignment 1 and 2 features.
+4. `visitor.js` and `github.js` each start their own feature and reuse the shared names from `script.js`.
+
+The site uses classic scripts instead of ES modules on purpose: modules do not load from `file://`, and the README promises that double-clicking `index.html` works.
 
 ## Visual system
 
@@ -27,8 +42,8 @@ The default theme is light. A saved dark preference is respected on subsequent v
 ## Page structure
 
 1. `#home`: atmospheric hero, display headline, scroll cue and motion toggle.
-2. `#about`: introduction, time-based greeting and original profile photo.
-3. `#projects`: Mizanyti screenshot composition and portfolio preview.
+2. `#about`: introduction, time-based greeting, original profile photo and the **visitor panel** (`#visitor`).
+3. `#projects`: Mizanyti screenshot composition, portfolio preview and the **live GitHub list** (`#github`).
 4. `#skills`: the toolkit, with a live search box, category chips and four editorial rows of tools.
 5. `#curiosity`: a random Wikipedia article loaded from a public API.
 6. `#contact`: GitHub link, local demo form and footer.
@@ -39,7 +54,7 @@ The default theme is light. A saved dark preference is respected on subsequent v
 | Function | Responsibility |
 | --- | --- |
 | `initThemeToggle()` | Switches light/dark color palettes, saves the preference and updates the accessible label and browser theme color. |
-| `initGreeting()` | Adds a local-time greeting and current year. |
+| `initGreeting()` | Adds a local-time greeting (with the visitor's saved name, if any) and the current year. |
 | `initHeader()` | Uses a scheduled animation frame on scroll/resize to select the header's foreground color. |
 | `initMotion()` | Handles the pause control, saved motion preference, reduced-motion changes and pausing offscreen hero animations. |
 | `initScrollReveal()` | Reveals content as it enters the viewport. Keyboard focus also reveals its parent immediately. |
@@ -49,7 +64,134 @@ The default theme is light. A saved dark preference is respected on subsequent v
 | `initCuriosity()` | Loads, shows, saves and restores a random Wikipedia article, with loading and error states. |
 | `playEntrance()` | Replays the entrance animation on an element each time it becomes visible again. |
 | `syncScrollLock()` | Keeps background scrolling locked while a dialog is open. |
-| `initContactForm()` | Validates fields, focuses the first invalid field and displays an explicit local-preview confirmation. Retains the visitor's draft. |
+| `initContactForm()` | Validates fields, suggests email typo fixes, counts ready fields, focuses the first invalid field and displays a topic-specific local-preview confirmation. Retains the visitor's draft. |
+| `initVisitor()` *(visitor.js)* | Starts the name form, the visitor-type path, the visit timer and the "Forget everything" button. |
+| `initGitHubProjects()` *(github.js)* | Loads, caches and shows the GitHub repositories, with filter, sort, loading, error and empty states. |
+
+## What is new in Assignment 3
+
+| Requirement | Where it is met |
+| --- | --- |
+| API integration | GitHub REST API: my public repositories, live (`js/github.js`) |
+| Complex logic | Filter **and** sort the repositories; group them with rules; step-by-step name checks; a path that changes with the visitor type; a visit timer that only counts visible time; email typo detection with edit distance; a ready-fields counter and topic-specific messages in the form |
+| State management | One store (`js/state.js`) that saves, validates and broadcasts the visitor's name, visitor type, filter, sort, visit count and total time, synced across tabs; theme and language preferences as before |
+| Performance | Subset WOFF2 fonts, WebP images, responsive `srcset`, lazy loading, a 30-minute API cache, no request until a section is near the screen |
+| AI integration | See [`ai-usage-report.md`](ai-usage-report.md) |
+
+### Shared state store (`js/state.js`)
+
+Before Assignment 3, each feature saved its own `localStorage` key in its own way. The new store gives the visitor-related data one home with one set of rules:
+
+| Method | What it does |
+| --- | --- |
+| `get(key)` | Returns the current value. |
+| `set(patch)` | Takes an object such as `{ repoSort: 'name' }`. Keeps only keys that exist, pass their rule and actually changed. If anything changed, it saves once and calls every listener once with the list of changed keys. |
+| `subscribe(listener)` | Registers `listener(changedKeys, state)` and returns a function that unsubscribes. |
+| `reset()` | Puts every key back to its default and deletes the saved copy. |
+
+| Key | Default | Rule | Used by |
+| --- | --- | --- | --- |
+| `name` | `''` | string, at most 30 characters | greeting, visitor panel, contact form |
+| `role` | `''` | `''`, `recruiter`, `student` or `curious` | visitor panel |
+| `repoCategory` | `all` | `all`, `coursework`, `personal` or `team` | GitHub list, visitor panel links |
+| `repoSort` | `updated` | `updated`, `newest`, `oldest`, `name` or `stars` | GitHub list |
+| `visits` | `0` | whole number ≥ 0 | visitor panel |
+| `secondsSpent` | `0` | whole number ≥ 0 | visitor panel |
+
+Design decisions:
+
+- **Saved data is untrusted.** Anyone can edit `localStorage` in the developer tools. When the store loads, each value must pass its rule or it is replaced by the default, so a broken value can never crash a feature.
+- **Features never talk to each other directly.** The visitor panel's "Open my coursework" link only calls `store.set({ repoCategory: 'coursework' })`. The GitHub list is subscribed to the store and redraws itself. The greeting and the contact form react to `name` changes the same way.
+- **Tabs stay in sync.** The browser fires a `storage` event in other tabs when one tab saves. The store reloads and notifies its listeners, so a name saved in one tab appears in the other.
+- **Theme, language and motion keep their own keys** (`theme`, `language`, `motion-paused`). The theme must be read by a tiny inline script in `<head>` before the CSS paints, to avoid a flash of the wrong theme, so it cannot wait for `state.js`.
+
+### Visitor panel (`js/visitor.js`)
+
+**Name.** The name form checks the input in order and stops at the first problem: empty → shorter than 2 characters → longer than 30 → contains a digit → contains anything other than letters separated by single spaces, hyphens or apostrophes. The letter test uses the Unicode pattern `\p{L}`, so Arabic names are accepted. Each step has its own message in both languages. After saving, the form is replaced by a greeting that is different for a first visit ("Nice to meet you, Sara.") and a return visit ("Welcome back, Sara."). The name also appears in the About greeting ("GOOD EVENING, SARA. I’M KHALED.") and fills an empty name field in the contact form.
+
+**Visitor type.** Three chips (`aria-pressed`) choose a path: recruiter, fellow student or just curious. Each path has its own title, text and two links, built from the `VISITOR_PATHS` object. Some links also change the state of another section: "Open my coursework" filters the GitHub list to coursework before scrolling there, and "My personal projects" filters it to personal projects. Pressing the selected chip again clears the choice.
+
+**Visit timer and counter.**
+
+1. A visit is counted once per browser session: a `sessionStorage` flag stops reloads from adding visits.
+2. A one-second interval adds a second only when `document.hidden` is false, so time in a background tab does not count.
+3. The total across visits is saved every 15 seconds, when the tab is hidden and on `pagehide`. It saves by **adding** the new seconds to the stored total rather than overwriting it, so two open tabs both count.
+4. The display uses `i18n.clock()` (`4:07`, `١:٠٤:٠٧`) and `i18n.minutes()` (`12 minutes`, `١٢ دقيقة`), which use `Intl` formatters so plurals and digits are right in both languages. The timer element has `role="timer"`, which screen readers do not announce every second.
+
+**Forget everything.** Resets the store (name, type, GitHub filter and sort, visit history), keeps counting the current visit, and confirms in a `role="status"` message.
+
+### Live GitHub repositories (`js/github.js`)
+
+`GET https://api.github.com/users/howiskhaled/repos?per_page=100&sort=pushed` returns my public repositories. It needs no key and allows cross-origin requests.
+
+**Flow**
+
+1. **Start.** If a saved list in `localStorage` (`github-repos`) is less than 30 minutes old, it is shown immediately and no request is made. Otherwise the loading skeleton shows and the request waits until the section is 300 px from the screen (`IntersectionObserver`).
+2. **Fetch.** `fetchRepos()` uses a 10-second `AbortController` timeout and turns every failure into an error with a `kind`: `offline`, `slow`, `rate` (HTTP 403/429 with `x-ratelimit-remaining: 0`), `missing` (404) or `failed`.
+3. **Clean.** `cleanRepo()` keeps only the fields the page uses, checks their types, accepts the repository link only if it is `https://github.com/…`, and accepts a homepage only if it is `https:`. Text is only ever written with `textContent`. The cached copy is cleaned the same way when read back.
+4. **Group.** `categorizeRepo()` applies three rules in order: a fork is a **team** project; a name containing `assignment`, `coursework` or a course code such as `swe363`, or a `coursework` topic, is **coursework**; everything else is **personal**.
+5. **Show.** Each card is cloned from a `<template>`: group, "Updated 3 days ago" (`Intl.RelativeTimeFormat`, so it is also correct in Arabic), a friendly title (`202338530-KhaledAlanazi-assignment2` becomes "Assignment 2"), the real repository name, the description, the language with its GitHub colour, stars (hidden when there are none) and a "Live site" link when the repository has a homepage.
+
+**Filter and sort.** `renderList()` works in four steps: count the repositories in each group (the counts appear in the chips), keep the ones in the selected group, sort them with the selected compare function, then draw them.
+
+| Sort | Compare function |
+| --- | --- |
+| Recently updated | newest `pushed_at` first |
+| Newest first | newest `created_at` first, ties by last update |
+| Oldest first | oldest `created_at` first, ties by last update |
+| Name, A to Z | the title the visitor sees, with `localeCompare` and `numeric: true` so "Assignment 2" comes before "Assignment 10" |
+| Most stars | most stars first, ties by last update |
+
+Both choices are saved in the store, so they survive a reload and can be set from the visitor panel.
+
+**Errors**
+
+| Situation | What the visitor sees |
+| --- | --- |
+| Loading | Three shimmering placeholder cards |
+| Offline | "You seem to be offline." with a hint and "Try again" |
+| No answer in 10 s | "GitHub is taking too long to answer." |
+| Rate limit reached | "GitHub needs a short break." and when it will answer again ("in 25 minutes", from `x-ratelimit-reset`) |
+| Profile not found | "That GitHub profile couldn’t be found." and a pointer to the GitHub link |
+| Any other failure | "Couldn’t load my repositories just now." |
+| Failure, but an older list exists | The older list, with a note: "GitHub couldn’t be reached, so this is the copy saved 1 hour ago." |
+| Group with no repositories | "Nothing in this group yet." and a "Show all repositories" button |
+| JavaScript disabled | A `<noscript>` message pointing to the GitHub link |
+
+A `requestId` counter ignores a late answer from an older request, the same way as in the Wikipedia section.
+
+### Contact form additions
+
+| Addition | How it works |
+| --- | --- |
+| Topic (required) | A `<select>` with four topics. The success message is different for each topic. |
+| Email typo check | After a valid email loses focus, `suggestEmail()` compares its domain with common domains using `editDistance()` (Levenshtein distance). If one is 1 or 2 edits away, the form shows "Did you mean sara@gmail.com?" with a **Use it** button. Real domains that look similar (`mail.com`, `ymail.com`, …) are on an allow list, so they are never "corrected". The suggestion never blocks sending. |
+| Progress | "2 of 4 ready" updates as the visitor types, without showing errors they have not earned yet, and becomes "All set" when every field passes. |
+| Saved name | A name saved in the visitor panel fills an empty name field. |
+
+Submitting still checks every field in order and focuses the first one with a problem; only when all four pass does the preview message appear.
+
+### Performance work
+
+See [Performance results](#performance-results) for the numbers.
+
+| Change | Why |
+| --- | --- |
+| Inter subset from 344 KB to 103 KB (Latin, punctuation, arrows and the few symbols the site uses; both variable axes kept) | Inter is preloaded and draws the hero headline, the page's largest element, so it was the main cause of the slow LCP on mobile |
+| Tajawal converted from TTF to subset WOFF2 (about 60 KB → 17 KB per weight) | The Arabic font, also used by the "العربية" button on every page |
+| JPG → WebP for all photos and screenshots (quality 80) | About 55 % smaller with no visible difference |
+| 240 px versions of the three screenshots in the phone collage, chosen with `srcset` and `sizes` | The collage shows them at about 100–220 px, so phones no longer download the 393 px files |
+| Profile photo resized from 400 px to 360 px (twice its 180 px display size) | Sharp on high-density screens without extra bytes |
+| Gallery image marked `loading="lazy"` | It sits in a closed dialog, so it is only fetched when the gallery opens |
+| GitHub list cached for 30 minutes and requested only near the screen | Fewer requests, faster repeat visits, and GitHub's 60 requests per hour limit is rarely reached |
+| Scroll-cue ring redrawn at twice the SVG coordinates | Same picture, but its text now has a legible computed size, which fixed Lighthouse's "legible font sizes" check |
+| Removed unused files and code | Old JPG and TTF files, four unused colour tokens and an unused translation |
+
+Scripts are `defer`red, images have `width` and `height` so nothing jumps while loading, and animation uses only `transform` and `opacity`. The CSS and JavaScript are not minified on purpose so they stay readable for marking; GitHub Pages compresses them with gzip, which removes most of the difference.
+
+### Compatibility
+
+The features use standard web APIs with long support: `fetch`, `AbortController`, `IntersectionObserver`, `Intl.RelativeTimeFormat`, Unicode property escapes in regular expressions (`\p{L}`), `<template>`, `<dialog>` and WebP. They are all supported by current Chrome, Edge, Firefox and Safari (Safari 14.1 or later). Where a feature can be missing, the page falls back: without `IntersectionObserver`, data loads immediately; without storage, nothing is remembered but everything works; without JavaScript, `<noscript>` messages explain what is missing.
 
 ## What is new in Assignment 2
 
@@ -117,16 +259,19 @@ The form is still a local demo. New in Assignment 2: the message field shows a l
 
 Only `opacity` and `transform` are animated, apart from the shimmer, which moves a background. With `prefers-reduced-motion: reduce`, the existing global rule disables all animations, and `playEntrance()` returns early.
 
-### Data kept in `localStorage`
+### Data kept in the browser
 
-| Key | Value | Why |
-| --- | --- | --- |
-| `theme` | `light` or `dark` | Remember the theme |
-| `language` | `en` or `ar` | Remember the language |
-| `motion-paused` | `true` or `false` | Remember the pause control |
-| `curiosity-fact` | The last Wikipedia article (title, description, extract, links, language) | Show something immediately on the next visit |
+| Key | Storage | Value | Why |
+| --- | --- | --- | --- |
+| `theme` | `localStorage` | `light` or `dark` | Remember the theme |
+| `language` | `localStorage` | `en` or `ar` | Remember the language |
+| `motion-paused` | `localStorage` | `true` or `false` | Remember the pause control |
+| `curiosity-fact` | `localStorage` | The last Wikipedia article | Show something immediately on the next visit |
+| `portfolio-visitor` | `localStorage` | The store: name, visitor type, GitHub filter and sort, visits, seconds spent | Assignment 3 state management |
+| `github-repos` | `localStorage` | The last GitHub list and when it was saved | 30-minute cache and offline fallback |
+| `visit-counted` | `sessionStorage` | `true` | Count a visit once per session |
 
-Nothing personal is stored, and the contact form saves nothing. Every read and write is wrapped in `try/catch`, so the site works with storage blocked.
+The only personal value is the first name a visitor chooses to type, which never leaves the browser and is removed by "Forget everything about me". The contact form saves nothing. Every read and write is wrapped in `try/catch`, so the site works with storage blocked.
 
 ## Gallery
 
@@ -156,7 +301,7 @@ Text that JavaScript creates while the page runs cannot be marked in the HTML, s
 - In the gallery the previous/next arrows swap, and the arrow keys and swipe direction reverse, so "forward" still points the way the text reads.
 - A visitor's name inside an Arabic sentence is wrapped in Unicode isolation marks (`⁨ … ⁩`), so a Latin name cannot scramble the order of the Arabic words around it.
 - The language button is `hidden` in the HTML and revealed by JavaScript, so it does not appear when it could not work.
-- Tajawal (Regular and Light, about 60 KB each) loads with `font-display: swap`.
+- Tajawal (Regular and Light, about 17 KB each after subsetting) loads with `font-display: swap`.
 
 ## Contact form
 
@@ -182,9 +327,11 @@ Connecting a real delivery service is separate work; do not change the form's co
 - `prefers-reduced-motion` disables animation and smooth scrolling; a separate pause control handles continuous decorative motion.
 - Animation uses transforms and opacity with `cubic-bezier(.19, 1, .22, 1)` easing. Hero motion pauses offscreen.
 - Images have explicit dimensions, and below-fold project/profile images load lazily.
-- Local assets allow the page to work without runtime third-party requests.
+- The only requests to other sites are the GitHub and Wikipedia API calls, made only when those sections are reached.
 
 ## Verification
+
+VERIFICATION_A3
 
 **Assignment 2 checks.** These were run by Claude Code in the Claude desktop app's built-in browser (a Chromium-based browser), served with `python3 -m http.server`. I have not yet tested other browsers, and a real phone is still to do.
 
@@ -199,6 +346,9 @@ Browser smoke checks for Assignment 1 covered 320, 375, 390, 700, 768, 1024, 144
 
 ## Known limits
 
+- The GitHub list depends on GitHub's public API, which allows 60 requests per hour per network without signing in. The cache and the saved-copy fallback make this rare, and the page explains it when it happens.
+- Repository groups come from simple name rules. A future repository with an unusual name may need a `coursework` topic on GitHub to be grouped correctly.
+- The visit timer counts seconds with `setInterval`, so it can drift by a second or two over a long visit. That is fine for a friendly display.
 - The Wikipedia feature needs an internet connection and depends on a service I do not control. If Wikipedia changes its API, the section shows its error state instead of breaking the page.
 - Random Wikipedia articles are not curated, so occasionally one may be obscure or sensitive.
 - Toolkit search matches plain substrings, with no fuzzy matching and no special handling of Arabic diacritics.
