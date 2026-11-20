@@ -60,7 +60,7 @@ h1, h2, h3, p, ul, figure { margin: 0; }
 h1, h2, h3 { font-weight: 400; }
 ul { padding: 0; list-style: none; }
 a { color: inherit; text-decoration: none; }
-button, input, textarea { font: inherit; color: inherit; border-radius: 0; }
+button, input, textarea, select { font: inherit; color: inherit; border-radius: 0; }
 button { cursor: pointer; background: none; }
 img, svg { display: block; }
 img { max-width: 100%; height: auto; }
@@ -139,6 +139,34 @@ button:disabled { cursor: default; }
 .about-copy .eyebrow { color: var(--text); margin-bottom: 24px; }
 .about-copy > p:not(.eyebrow) { font-size: 18px; line-height: 1.65; letter-spacing: -.025em; margin-bottom: 20px; color: var(--muted); }
 .about-copy .text-link { margin-top: 12px; }
+
+/* Visitor panel: name, role path and visit timer. */
+.visitor { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; margin-top: 96px; padding-top: 32px; border-top: 1px solid var(--line); }
+.visitor__eyebrow { color: var(--accent); margin-bottom: 20px; }
+.visitor__title { font-size: clamp(30px, 3.4vw, 42px); line-height: 1.1; font-weight: 300; letter-spacing: -.045em; }
+.visitor__lead { margin-top: 20px; max-width: 320px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+.visitor__body { display: grid; gap: 36px; }
+.visitor-name .field { margin-bottom: 0; }
+.visitor-name__row { display: flex; align-items: flex-end; gap: 16px; }
+.visitor-name__row input { flex: 1; }
+.visitor-known { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
+.visitor-known__hello { font-size: 22px; line-height: 1.3; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.visitor-known .text-link { gap: 12px; }
+.visitor-role__label, .visitor-stats dt { font-size: 9px; letter-spacing: .05em; color: var(--accent); }
+.visitor-role__label { margin-bottom: 12px; }
+.visitor-path { margin-top: 24px; padding: 20px 24px; border-inline-start: 3px solid var(--accent); background: var(--bg); }
+.visitor-path__title { font-size: 18px; line-height: 1.35; letter-spacing: -.02em; }
+.visitor-path__text { margin-top: 8px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+.visitor-path__text:empty, .visitor-path__actions:empty { display: none; }
+.visitor-path__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.visitor-path__actions .pill { min-height: 44px; gap: 18px; padding: 8px 20px; }
+.visitor-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; border-block: 1px solid var(--line); padding-block: 18px; }
+.visitor-stats dd { margin: 6px 0 0; font-size: 22px; line-height: 1.2; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.visitor-forget { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin-top: -16px; }
+.visitor-forget .text-link { gap: 12px; color: var(--muted); }
+.visitor-forget .text-link:hover { color: var(--accent); }
+.visitor-forget__status { font-size: 12px; color: var(--muted); }
+
 .work-section { padding-top: 56px; }
 .work-section .section-marker { border-top: 1px solid var(--line); padding-top: 24px; }
 .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 64px; }
@@ -184,7 +212,7 @@ button:disabled { cursor: default; }
 .work-footnote { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--line); }
 .work-footnote p { font-size: 13px; color: var(--muted); }
 
-.skills-section { color: #fff7df; background: #193e35; --muted: #b9cdbd; --line: #527466; --accent: #efc47d; }
+.skills-section { color: #fff7df; background: #193e35; --muted: #b9cdbd; --line: #527466; --accent: #efc47d; --on-accent: #193e35; }
 .skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
 .skills-intro h2 { font-size: 50px; line-height: 1.08; font-weight: 300; letter-spacing: -.05em; }
 .skills-intro p { max-width: 290px; font-size: 14px; line-height: 1.7; color: var(--muted); margin-top: 32px; }
@@ -208,7 +236,7 @@ button:disabled { cursor: default; }
 .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 36px; padding: 6px 16px; border: 1px solid var(--line); border-radius: var(--radius-pill); font-size: 12px; line-height: 1.4; transition: color .4s, background-color .4s, border-color .4s, transform .8s var(--ease); }
 .chip:hover { border-color: var(--accent); transform: translateY(-4px); }
-.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #193e35; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 .toolkit-count { min-height: 1.6em; margin-top: 20px; font-size: 11px; color: var(--muted); }
 .empty-state { padding: 32px 0; border-top: 1px solid var(--line); }
 .empty-state__title { font-size: 20px; line-height: 1.3; letter-spacing: -.03em; overflow-wrap: anywhere; }
@@ -348,6 +376,10 @@ dialog::backdrop { background: rgba(0,0,0,.8); }
   .about-copy { max-width: 480px; margin-inline-start: 12%; }
   .about-copy > p:not(.eyebrow) { font-size: 16px; }
   .about-copy .eyebrow { margin-bottom: 16px; font-size: 9px; }
+  .visitor { grid-template-columns: 1fr; gap: 32px; margin-top: 64px; }
+  .visitor-stats { grid-template-columns: 1fr 1fr; }
+  .visitor-stats > div:last-child { grid-column: 1 / -1; }
+  .visitor-path { padding: 18px; }
   .work-section { padding-top: 20px; }
   .section-heading { display: block; margin-bottom: 36px; }
   .section-heading h2 { font-size: clamp(58px, 13vw, 82px); }
@@ -447,6 +479,10 @@ html[dir="rtl"] .field label { font-size: 12px; }
 html[dir="rtl"] .field input, html[dir="rtl"] .field textarea { font-size: 17px; }
 html[dir="rtl"] .field__error, html[dir="rtl"] .field__hint { font-size: 13px; }
 html[dir="rtl"] .form__status { font-size: 16px; }
+html[dir="rtl"] .visitor__title { line-height: 1.5; }
+html[dir="rtl"] .visitor__lead, html[dir="rtl"] .visitor-path__text { font-size: 16px; line-height: 1.85; }
+html[dir="rtl"] .visitor-role__label, html[dir="rtl"] .visitor-stats dt, html[dir="rtl"] .visitor-forget__status { font-size: 13px; }
+html[dir="rtl"] .visitor-path__title, html[dir="rtl"] .visitor-known__hello { font-size: 22px; line-height: 1.6; }
 html[dir="rtl"] .footer-wordmark { line-height: 1.5; }
 html[dir="rtl"] .footer-bottom { font-size: 12px; }
 html[dir="rtl"] .lightbox__btn, html[dir="rtl"] .lightbox__figure figcaption { font-size: 15px; }

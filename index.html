@@ -15,7 +15,11 @@
     })();
   </script>
   <link rel="stylesheet" href="css/styles.css">
-  <script src="js/i18n.js" defer=""></script><script src="js/script.js" defer=""></script>
+  <!-- Deferred scripts run in this order after the page is parsed: language, shared state, then the features. -->
+  <script src="js/i18n.js" defer=""></script>
+  <script src="js/state.js" defer=""></script>
+  <script src="js/script.js" defer=""></script>
+  <script src="js/visitor.js" defer=""></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a><p id="language-status" class="sr-only" role="status"></p>
@@ -47,6 +51,31 @@
         <div class="about-content">
           <figure class="about-portrait reveal"><img src="assets/images/profile.jpg" alt="Khaled's childhood profile photo" width="400" height="400" loading="lazy" data-i18n-alt="about.photoAlt"><figcaption data-i18n="about.photoCaption">Curious from the beginning.</figcaption></figure>
           <div class="about-copy reveal"><p class="eyebrow" id="greeting">HELLO, I'M KHALED.</p><p data-i18n="about.intro">I’m a Computer Science student turning ideas into things you can use. I’m finding my way through full-stack development, building for the web and mobile, and learning something with every project.</p><p data-i18n="about.security">Cybersecurity keeps me curious. Understanding how systems break helps me build them with more care.</p><a class="text-link" href="#skills"><span data-i18n="about.tools">The tools I’m growing with</span><span aria-hidden="true" class="directional-arrow">↘</span></a></div>
+        </div>
+        <!-- Visitor panel: a remembered name, a path chosen by role, and a visit timer (js/visitor.js). -->
+        <div class="visitor reveal" id="visitor" role="region" aria-labelledby="visitor-title">
+          <div class="visitor__intro">
+            <p class="eyebrow visitor__eyebrow" data-i18n="visitor.marker">MAKE THIS VISIT YOURS</p>
+            <h3 class="visitor__title" id="visitor-title" data-i18n="visitor.title">Tell me a little about you.</h3>
+            <p class="visitor__lead" data-i18n="visitor.lead">Everything you choose here stays in this browser. Nothing is sent anywhere.</p>
+          </div>
+          <div class="visitor__body">
+            <form class="visitor-name" id="visitor-form" novalidate="">
+              <div class="field"><label for="visitor-name" data-i18n="visitor.nameLabel">WHAT SHOULD I CALL YOU?</label><div class="visitor-name__row"><input id="visitor-name" name="visitor-name" type="text" placeholder="Your first name" autocomplete="given-name" maxlength="30" aria-describedby="visitor-name-error" data-i18n-placeholder="visitor.namePlaceholder" dir="auto"><button class="chip" type="submit" data-i18n="visitor.save">Save</button></div><p class="field__error" id="visitor-name-error" aria-live="polite"></p></div>
+            </form>
+            <div class="visitor-known" id="visitor-known" hidden><p class="visitor-known__hello" id="visitor-hello"></p><button class="text-link" type="button" id="visitor-change"><span data-i18n="visitor.change">Change my name</span><span aria-hidden="true">✎</span></button></div>
+            <div class="visitor-role">
+              <p class="visitor-role__label" id="visitor-role-label" data-i18n="visitor.roleLabel">I’M HERE AS…</p>
+              <div class="chip-group" role="group" aria-labelledby="visitor-role-label"><button class="chip" type="button" data-role="recruiter" aria-pressed="false" data-i18n="visitor.role.recruiter">A recruiter</button><button class="chip" type="button" data-role="student" aria-pressed="false" data-i18n="visitor.role.student">A fellow student</button><button class="chip" type="button" data-role="curious" aria-pressed="false" data-i18n="visitor.role.curious">Just curious</button></div>
+              <div class="visitor-path" id="visitor-path" aria-live="polite"><p class="visitor-path__title" id="visitor-path-title"></p><p class="visitor-path__text" id="visitor-path-text"></p><div class="visitor-path__actions" id="visitor-path-actions"></div></div>
+            </div>
+            <dl class="visitor-stats">
+              <div><dt data-i18n="visitor.timerLabel">THIS VISIT</dt><dd><span id="visit-timer" role="timer" dir="ltr">0:00</span></dd></div>
+              <div><dt data-i18n="visitor.countLabel">YOUR VISITS</dt><dd id="visit-count">1</dd></div>
+              <div><dt data-i18n="visitor.totalLabel">TIME HERE, ALL VISITS</dt><dd id="visit-total"></dd></div>
+            </dl>
+            <div class="visitor-forget"><button class="text-link" type="button" id="visitor-forget"><span data-i18n="visitor.forget">Forget everything about me</span><span aria-hidden="true">×</span></button><p class="visitor-forget__status" id="visitor-status" role="status"></p></div>
+          </div>
         </div>
       </div>
     </section>
