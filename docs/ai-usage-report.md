@@ -79,11 +79,13 @@ These were made by the AI during the conversation, and I reviewed them (see sect
 
 ## 5. What I changed after the AI draft
 
-> **Khaled: fill this in yourself before submitting.** Read the code and the site, decide what you want to change (wording, colours, a feature detail), and list each change here. If you ask Claude to type an edit for you, say that you chose it and Claude typed it, as in Assignment 2. If you changed nothing, say so honestly.
+I chose these changes after reviewing the AI's first version and the live site. Claude Code typed the edits for me, because I told it which ones I wanted (it offered a few ideas and I picked three, and chose the new heading wording myself).
 
 | File | What I changed | Why |
 | --- | --- | --- |
-| | | |
+| `js/script.js`, `docs/technical-documentation.md` | Email check: `you@kfupm.edu` (missing `.sa`) and typos of it now suggest `you@kfupm.edu.sa` | KFUPM students and staff are likely visitors, and `kfupm.edu` was 3 edits away, too far for the AI's typo rule, so it got no suggestion |
+| `js/visitor.js`, `docs/technical-documentation.md` | Saved names get a capital letter at the start of each part (`sara al-otaibi` → `Sara Al-Otaibi`) | A greeting with a lowercase name looked careless |
+| `index.html`, `js/i18n.js` | Changed the GitHub heading from "Everything else I’m working on." to "What I’m building now." and updated the Arabic heading to match | It sounds more like me and is shorter |
 
 My own checks:
 
