@@ -118,7 +118,15 @@ I should be able to explain each of these without the AI:
 
 ## 7. Learning Outcomes
 
-> **Khaled: write this section in your own words before submitting.** The brief asks what *you* learned. Some prompts: Which part was hardest to understand (the store? `fetch` and error kinds? edit distance?) and what helped? What did measuring with Lighthouse first teach you about performance? What did you learn about treating API and saved data as untrusted? How was working with AI different from Assignment 2?
+The hardest part for me was the store because I didn’t understand how `subscribe()` and closures worked together. I was confused about how a function could still access variables after the original function finished.
+
+It made sense when I followed the walkthrough and traced a change through `set()`. I can now explain why it only notifies subscribers about changed keys: unrelated parts of the page do not need updating.
+
+I learned that before optimising, you should measure what is actually slow. I expected JavaScript to cause the phone performance problem, so the large headline font surprised me. Next time, I would check Lighthouse before changing code.
+
+I didn’t know that data in `localStorage` also needed validation. Stored values can be edited or outdated, and GitHub responses may contain unexpected fields. `cleanRepo()` and the store’s rules help prevent invalid data from breaking the page.
+
+Compared to Assignment 2, I took more responsibility for choosing and checking the AI’s edits. I still need practice changing the fetch code independently. Next time, I want to attempt a small change myself before asking AI for help.
 
 ---
 
