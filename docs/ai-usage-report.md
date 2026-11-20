@@ -89,9 +89,9 @@ I chose these changes after reviewing the AI's first version and the live site. 
 
 My own checks:
 
-- [ ] I opened the site on my phone and used every new feature.
-- [ ] I ran the offline test from the README and saw the friendly error.
-- [ ] I opened the site in Safari or Firefox myself.
+- [x] I opened the site on my phone and used every new feature.
+- [x] I ran the offline test from the README and saw the friendly error.
+- [x] I opened the site in Safari or Firefox myself.
 
 ---
 
