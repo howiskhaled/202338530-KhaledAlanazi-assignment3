@@ -219,10 +219,10 @@ button:disabled { cursor: default; }
 .chip__count { margin-inline-start: 4px; font-size: 10px; opacity: .75; font-variant-numeric: tabular-nums; }
 .chip__count:empty { display: none; }
 .repos__sort { margin-bottom: 0; min-width: 200px; }
-.repos__sort select { width: 100%; padding: 10px 28px 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat right center; font-size: 13px; cursor: pointer; -webkit-appearance: none; appearance: none; }
-.repos__sort select:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 4px; }
-.repos__sort option { color: var(--text); background: var(--bg); }
-html[dir="rtl"] .repos__sort select { padding: 10px 0 10px 28px; background-position: left center; }
+.field select { width: 100%; padding: 10px 28px 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat right center; font-size: 13px; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.field select:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 4px; }
+.field option { color: var(--text); background: var(--bg); }
+html[dir="rtl"] .field select { padding: 10px 0 10px 28px; background-position: left center; }
 .repos__summary { min-height: 1.6em; margin-top: 24px; font-size: 11px; color: var(--muted); }
 .repos__loading, .repo-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
 .repo-skeleton { min-height: 220px; border: 1px solid var(--line); background: linear-gradient(90deg, var(--surface) 25%, var(--accent-soft) 50%, var(--surface) 75%) 0 0 / 300% 100%; animation: shimmer 1.4s linear infinite; }
@@ -325,6 +325,11 @@ html[dir="rtl"] .repos__sort select { padding: 10px 0 10px 28px; background-posi
 .field textarea { resize: vertical; min-height: 110px; }
 .field input:focus, .field textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 4px; }
 .field [aria-invalid="true"] { border-bottom: 2px solid var(--text); }
+.field select:invalid { color: var(--muted); }
+.email-suggestion { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 16px; margin-top: 8px; font-size: 11px; color: var(--text); animation: message-in .5s var(--ease); }
+.email-suggestion .text-link { padding: 0; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.form__progress { margin: -8px 0 20px; font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+.form__progress:empty { display: none; }
 .field__error { font-size: 11px; margin-top: 8px; animation: message-in .5s var(--ease); }
 .field__hint { font-size: 11px; margin-top: 8px; color: var(--muted); }
 .field__hint:empty { display: none; }
@@ -449,7 +454,7 @@ dialog::backdrop { background: rgba(0,0,0,.8); }
   .repos__sort { width: 100%; }
   .repos__loading, .repo-list { grid-template-columns: 1fr; }
   .repo-skeleton { min-height: 160px; }
-  .repos__sort select { font-size: 16px; }
+  .field select { font-size: 16px; }
   .work-footnote { margin-top: 40px; flex-direction: column; align-items: flex-start; gap: 20px; }
   .skills-layout { grid-template-columns: 1fr; gap: 40px; }
   .skills-intro h2 { font-size: 44px; }
@@ -524,7 +529,7 @@ html[dir="rtl"] .contact-copy > p { font-size: 18px; line-height: 1.8; }
 html[dir="rtl"] .contact-copy .contact-note, html[dir="rtl"] .form__footer > p { font-size: 13px; }
 html[dir="rtl"] .field label { font-size: 12px; }
 html[dir="rtl"] .field input, html[dir="rtl"] .field textarea { font-size: 17px; }
-html[dir="rtl"] .field__error, html[dir="rtl"] .field__hint { font-size: 13px; }
+html[dir="rtl"] .field__error, html[dir="rtl"] .field__hint, html[dir="rtl"] .email-suggestion, html[dir="rtl"] .email-suggestion .text-link, html[dir="rtl"] .form__progress { font-size: 13px; }
 html[dir="rtl"] .form__status { font-size: 16px; }
 html[dir="rtl"] .visitor__title { line-height: 1.5; }
 html[dir="rtl"] .visitor__lead, html[dir="rtl"] .visitor-path__text { font-size: 16px; line-height: 1.85; }
@@ -533,7 +538,7 @@ html[dir="rtl"] .visitor-path__title, html[dir="rtl"] .visitor-known__hello { fo
 html[dir="rtl"] .repos__title { line-height: 1.45; }
 html[dir="rtl"] .repos__lead, html[dir="rtl"] .repo__description, html[dir="rtl"] .repos__error-hint { font-size: 15px; line-height: 1.8; }
 html[dir="rtl"] .repos__summary, html[dir="rtl"] .repos__note, html[dir="rtl"] .repo__top, html[dir="rtl"] .repo__meta, html[dir="rtl"] .chip__count { font-size: 13px; }
-html[dir="rtl"] .repos__sort select { font-size: 16px; }
+html[dir="rtl"] .field select { font-size: 16px; }
 html[dir="rtl"] .repo__category { text-transform: none; }
 html[dir="rtl"] .footer-wordmark { line-height: 1.5; }
 html[dir="rtl"] .footer-bottom { font-size: 12px; }
