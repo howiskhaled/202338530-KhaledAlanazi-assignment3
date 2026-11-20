@@ -1,7 +1,10 @@
 'use strict';
 
 const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+// Shared by every feature file. i18n.js and state.js load before this file;
+// visitor.js and github.js load after it and reuse these names.
 const i18n = window.portfolioI18n;
+const store = window.portfolioState;
 i18n.init();
 
 function initThemeToggle() {
@@ -29,14 +32,20 @@ function getGreeting(hour) {
   return 'greeting.night';
 }
 
+// The greeting depends on two things: the time of day and whether the visitor saved a name.
 function initGreeting() {
   const update = () => {
-    document.getElementById('greeting').textContent = i18n.t(getGreeting(new Date().getHours()));
+    const key = getGreeting(new Date().getHours());
+    const name = store.get('name');
+    document.getElementById('greeting').textContent = name
+      ? i18n.t(`${key}Named`, { name: `\u2068${i18n.language === 'ar' ? name : name.toLocaleUpperCase()}\u2069` })
+      : i18n.t(key);
     ['year', 'hero-year'].forEach((id) => {
       document.getElementById(id).textContent = i18n.number(new Date().getFullYear());
     });
   };
   document.addEventListener('languagechange', update);
+  store.subscribe((changed) => { if (changed.includes('name')) update(); });
   update();
 }
 

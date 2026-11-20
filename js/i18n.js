@@ -46,7 +46,33 @@ window.portfolioI18n = (() => {
       'curiosity.noteLive': 'A random article from the {lang} Wikipedia. I did not choose or check it.',
       'curiosity.noteSaved': 'Saved from your last visit. Press the button for a fresh one.',
       'form.hintMore': '{count} more characters to go.',
-      'form.hintOk': 'That’s enough to get started.'
+      'form.hintOk': 'That’s enough to get started.',
+      'greeting.morningNamed': 'GOOD MORNING, {name}. I’M KHALED.',
+      'greeting.afternoonNamed': 'GOOD AFTERNOON, {name}. I’M KHALED.',
+      'greeting.eveningNamed': 'GOOD EVENING, {name}. I’M KHALED.',
+      'greeting.nightNamed': 'HELLO, NIGHT OWL {name}. I’M KHALED.',
+      'visitor.helloNew': 'Nice to meet you, {name}.',
+      'visitor.helloBack': 'Welcome back, {name}. Good to see you again.',
+      'visitor.error.empty': 'Type a name first.',
+      'visitor.error.short': 'A name needs at least 2 letters.',
+      'visitor.error.long': 'That’s a long one. Please keep it under 30 characters.',
+      'visitor.error.digits': 'Names don’t usually have numbers. Try letters only.',
+      'visitor.error.characters': 'Use letters, with single spaces, hyphens or apostrophes between them.',
+      'visitor.underMinute': 'Under a minute',
+      'visitor.forgotten': 'Done. Your name, your choices and your visit history are gone from this browser.',
+      'path.none.title': 'Pick one and I’ll point you to the best parts.',
+      'path.recruiter.title': 'Short on time? Start here.',
+      'path.recruiter.text': 'Mizanyti shows how I think about real users, privacy and Arabic-first design. My personal GitHub projects show what I build when no one assigns it.',
+      'path.recruiter.action1': 'See Mizanyti',
+      'path.recruiter.action2': 'My personal projects',
+      'path.student.title': 'Fellow student? Welcome.',
+      'path.student.text': 'My coursework is public. The link below filters my GitHub list to it, so you can see how each assignment grew from the one before.',
+      'path.student.action1': 'Open my coursework',
+      'path.student.action2': 'Say hi',
+      'path.curious.title': 'Curious too? Good.',
+      'path.curious.text': 'Grab a random Wikipedia article, or type a word into the toolkit search and see what comes up.',
+      'path.curious.action1': 'Learn something new',
+      'path.curious.action2': 'Try the toolkit search'
     },
     ar: {
       'page.title': 'خالد العنزي — فضولي يخلّيني أجرّب.',
@@ -213,7 +239,48 @@ window.portfolioI18n = (() => {
       'curiosity.noteLive': 'مقالة عشوائية من ويكيبيديا {lang}. ما اخترتها ولا راجعتها.',
       'curiosity.noteSaved': 'محفوظة من زيارتك الأخيرة. اضغط الزر عشان تجيب وحدة جديدة.',
       'form.hintMore': 'باقي {count} من الأحرف.',
-      'form.hintOk': 'كذا يكفي للبداية.'
+      'form.hintOk': 'كذا يكفي للبداية.',
+      'greeting.morningNamed': 'صباح الخير يا {name}، أنا خالد.',
+      'greeting.afternoonNamed': 'يا هلا يا {name}، أنا خالد.',
+      'greeting.eveningNamed': 'مساء الخير يا {name}، أنا خالد.',
+      'greeting.nightNamed': 'هلا بالسهران يا {name}، أنا خالد.',
+      'visitor.marker': 'خلّ الزيارة على ذوقك',
+      'visitor.title': 'عرّفني عليك شوي.',
+      'visitor.lead': 'كل اللي تختاره هنا يبقى في متصفحك، وما ينرسل لأي مكان.',
+      'visitor.nameLabel': 'وش أناديك؟',
+      'visitor.namePlaceholder': 'اسمك الأول',
+      'visitor.save': 'احفظ',
+      'visitor.change': 'غيّر اسمي',
+      'visitor.roleLabel': 'أنا هنا…',
+      'visitor.role.recruiter': 'أدوّر موظفين',
+      'visitor.role.student': 'طالب مثلك',
+      'visitor.role.curious': 'بس فضول',
+      'visitor.timerLabel': 'هالزيارة',
+      'visitor.countLabel': 'عدد زياراتك',
+      'visitor.totalLabel': 'وقتك هنا، كل الزيارات',
+      'visitor.forget': 'انسَ كل شي عنّي',
+      'visitor.helloNew': 'تشرّفنا يا {name}.',
+      'visitor.helloBack': 'هلا والله يا {name}، نوّرت من جديد.',
+      'visitor.error.empty': 'اكتب اسمك أول.',
+      'visitor.error.short': 'الاسم لازم يكون حرفين على الأقل.',
+      'visitor.error.long': 'الاسم طويل شوي، خلّه أقل من ٣٠ حرف.',
+      'visitor.error.digits': 'الأسماء عادةً ما فيها أرقام، اكتب حروف بس.',
+      'visitor.error.characters': 'استخدم حروف بس، وبينها مسافة أو شرطة أو فاصلة عليا وحدة.',
+      'visitor.underMinute': 'أقل من دقيقة',
+      'visitor.forgotten': 'تم. اسمك واختياراتك وسجل زياراتك انمسحت من هالمتصفح.',
+      'path.none.title': 'اختر وحدة، وأدلّك على أحسن شي يناسبك.',
+      'path.recruiter.title': 'وقتك ضيّق؟ ابدأ من هنا.',
+      'path.recruiter.text': 'ميزانيتي يوضّح كيف أفكّر في المستخدم والخصوصية والتصميم اللي يبدأ بالعربي. ومشاريعي الشخصية على GitHub تبيّن وش أبني لما محد يطلب مني.',
+      'path.recruiter.action1': 'شوف ميزانيتي',
+      'path.recruiter.action2': 'مشاريعي الشخصية',
+      'path.student.title': 'طالب مثلي؟ حيّاك.',
+      'path.student.text': 'واجباتي الجامعية منشورة. الرابط تحت يصفّي قائمة GitHub عليها، عشان تشوف كيف كل واجب كبر من اللي قبله.',
+      'path.student.action1': 'افتح واجباتي',
+      'path.student.action2': 'قل هلا',
+      'path.curious.title': 'فضولي مثلي؟ زين.',
+      'path.curious.text': 'خذ لك مقالة عشوائية من ويكيبيديا، أو اكتب كلمة في بحث الأدوات وشوف وش يطلع.',
+      'path.curious.action1': 'تعلّم شي جديد',
+      'path.curious.action2': 'جرّب بحث الأدوات'
     }
   };
   const bindings = [];
@@ -224,8 +291,34 @@ window.portfolioI18n = (() => {
     return message.replace(/\{(\w+)\}/g, (_, name) => String(values[name] ?? ''));
   }
 
+  const locale = () => (language === 'ar' ? 'ar-SA' : 'en');
+  const zero = () => (language === 'ar' ? '٠' : '0');
+
   function number(value) {
-    return new Intl.NumberFormat(language === 'ar' ? 'ar-SA' : 'en', { useGrouping: false }).format(value);
+    return new Intl.NumberFormat(locale(), { useGrouping: false }).format(value);
+  }
+
+  // "3 days ago" / "قبل ٣ أيام": picks the largest unit that fits.
+  const TIME_UNITS = [['year', 31536000], ['month', 2592000], ['week', 604800], ['day', 86400], ['hour', 3600], ['minute', 60]];
+  function relativeTime(date) {
+    const seconds = (date.getTime() - Date.now()) / 1000;
+    const formatter = new Intl.RelativeTimeFormat(locale(), { numeric: 'auto' });
+    const match = TIME_UNITS.find(([, size]) => Math.abs(seconds) >= size);
+    return match ? formatter.format(Math.round(seconds / match[1]), match[0]) : formatter.format(0, 'minute');
+  }
+
+  // A stopwatch reading such as 4:07 or 1:04:07.
+  function clock(totalSeconds) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    const pad = (value) => number(value).padStart(2, zero());
+    return hours ? `${number(hours)}:${pad(minutes)}:${pad(seconds)}` : `${number(minutes)}:${pad(seconds)}`;
+  }
+
+  // "12 minutes" / "١٢ دقيقة", with the plural rules of each language.
+  function minutes(count) {
+    return new Intl.NumberFormat(locale(), { style: 'unit', unit: 'minute', unitDisplay: 'long', useGrouping: false }).format(count);
   }
 
   function setLanguage(next, persist = true) {
@@ -274,5 +367,5 @@ window.portfolioI18n = (() => {
     });
   }
 
-  return { init, t, number, setLanguage, get language() { return language; } };
+  return { init, t, number, relativeTime, clock, minutes, setLanguage, get language() { return language; } };
 })();
