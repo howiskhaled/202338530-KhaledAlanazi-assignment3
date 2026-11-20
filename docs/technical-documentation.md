@@ -343,6 +343,8 @@ Connecting a real delivery service is separate work; do not change the form's co
 - Layout: no horizontal scrolling at 375 px; dark mode colours checked on the new sections.
 - Lighthouse 12.6 (mobile): performance 99, accessibility 100, best practices 100, SEO 100. Desktop: 100, 97, 100, 100 (see README *Performance results*).
 
+**Cross-browser test (live GitHub Pages site).** One Playwright script ran the same steps in **Google Chrome 157** and **WebKit 18.4** (Safari's engine): save the name "Sara" and check the greeting; choose "A fellow student" and follow "Open my coursework" (3 coursework repositories shown); sort by name (Assignment 1, 2, 3, Course register, Team8 mall hub); watch the timer advance; type `sara@gmial.com` and get the `gmail.com` suggestion; submit the form (topic and message errors shown, name prefilled with "Sara"); open the gallery (WebP image decoded at 393 px); switch to Arabic (`dir="rtl"`, Arabic greeting, Arabic relative date); resize to 375 px (no horizontal overflow). Both browsers passed every step with no console errors or page errors. A Firefox run was planned, but the Firefox download failed repeatedly on this network, so Firefox has not been tested automatically.
+
 
 **Assignment 2 checks.** These were run by Claude Code in the Claude desktop app's built-in browser (a Chromium-based browser), served with `python3 -m http.server`. I have not yet tested other browsers, and a real phone is still to do.
 

@@ -109,11 +109,11 @@ The one desktop accessibility point is a known false positive: the header text i
 
 ## Browser support
 
-Tested in Chromium, Firefox and WebKit (the engine behind Safari) at desktop and phone sizes, in English and Arabic. It works in current Chrome, Edge, Firefox and Safari (14.1 or later). If storage is blocked, nothing is remembered but everything still works. Without JavaScript, the page still shows all its content and explains which live features need it.
+An automated test of every new feature passed on the live site in **Google Chrome 157** and **WebKit 18.4** (the engine behind Safari), at desktop and phone sizes, in English and Arabic, with no console errors. The site uses only standard features that current Chrome, Edge, Firefox and Safari (14.1 or later) all support; Firefox was not tested automatically. If storage is blocked, nothing is remembered but everything still works. Without JavaScript, the page still shows all its content and explains which live features need it.
 
 ## AI usage summary
 
-I used **Claude Code** (Claude Opus 5.5) for this assignment. I gave it the Assignment 3 brief and my Assignment 2 repository. It planned and built the GitHub section, the visitor panel, the shared store, the form checks and the performance work, tested them in Chromium, Firefox and WebKit and with Lighthouse, and drafted the documentation. Every AI-assisted commit has an `Assisted-by:` line. The usage log, what I changed afterwards and my declaration are in [`docs/ai-usage-report.md`](docs/ai-usage-report.md). The AI Evidence ZIP is submitted separately on Blackboard and is not part of this repository.
+I used **Claude Code** (Claude Opus 5.5) for this assignment. I gave it the Assignment 3 brief and my Assignment 2 repository. It planned and built the GitHub section, the visitor panel, the shared store, the form checks and the performance work, tested them in Chrome and WebKit (Safari's engine) and with Lighthouse, and drafted the documentation. Every AI-assisted commit has an `Assisted-by:` line. The usage log, what I changed afterwards and my declaration are in [`docs/ai-usage-report.md`](docs/ai-usage-report.md). The AI Evidence ZIP is submitted separately on Blackboard and is not part of this repository.
 
 ## Documentation
 
