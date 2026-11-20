@@ -32,8 +32,12 @@ function checkVisitorName(raw) {
   if (name.length > VISITOR_NAME_MAX) return { error: 'visitor.error.long' };
   if (/\p{N}/u.test(name)) return { error: 'visitor.error.digits' };
   if (!VISITOR_NAME_PATTERN.test(name)) return { error: 'visitor.error.characters' };
-  return { name };
+  return { name: capitalizeName(name) };
 }
+
+// "sara al-otaibi" → "Sara Al-Otaibi": a capital letter at the start of each part of the name.
+// Only the first letter changes, so names like "McDonald" keep their own capitals. Arabic has no capitals.
+const capitalizeName = (name) => name.replace(/(^|[ '’-])(\p{L})/gu, (match, separator, letter) => separator + letter.toLocaleUpperCase());
 
 // Unicode isolation marks keep a Latin name inside Arabic text (and the reverse) in the right order.
 const isolate = (text) => `⁨${text}⁩`;

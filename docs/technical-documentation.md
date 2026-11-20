@@ -107,7 +107,7 @@ Design decisions:
 
 ### Visitor panel (`js/visitor.js`)
 
-**Name.** The name form checks the input in order and stops at the first problem: empty → shorter than 2 characters → longer than 30 → contains a digit → contains anything other than letters separated by single spaces, hyphens or apostrophes. The letter test uses the Unicode pattern `\p{L}`, so Arabic names are accepted. Each step has its own message in both languages. After saving, the form is replaced by a greeting that is different for a first visit ("Nice to meet you, Sara.") and a return visit ("Welcome back, Sara."). The name also appears in the About greeting ("GOOD EVENING, SARA. I’M KHALED.") and fills an empty name field in the contact form.
+**Name.** The name form checks the input in order and stops at the first problem: empty → shorter than 2 characters → longer than 30 → contains a digit → contains anything other than letters separated by single spaces, hyphens or apostrophes. The letter test uses the Unicode pattern `\p{L}`, so Arabic names are accepted. Each step has its own message in both languages. A passing name is saved with a capital letter at the start of each part (`sara al-otaibi` → `Sara Al-Otaibi`); only first letters change, so `McDonald` stays as typed. After saving, the form is replaced by a greeting that is different for a first visit ("Nice to meet you, Sara.") and a return visit ("Welcome back, Sara."). The name also appears in the About greeting ("GOOD EVENING, SARA. I’M KHALED.") and fills an empty name field in the contact form.
 
 **Visitor type.** Three chips (`aria-pressed`) choose a path: recruiter, fellow student or just curious. Each path has its own title, text and two links, built from the `VISITOR_PATHS` object. Some links also change the state of another section: "Open my coursework" filters the GitHub list to coursework before scrolling there, and "My personal projects" filters it to personal projects. Pressing the selected chip again clears the choice.
 
@@ -165,7 +165,7 @@ A `requestId` counter ignores a late answer from an older request, the same way 
 | Addition | How it works |
 | --- | --- |
 | Topic (required) | A `<select>` with four topics. The success message is different for each topic. |
-| Email typo check | After a valid email loses focus, `suggestEmail()` compares its domain with common domains using `editDistance()` (Levenshtein distance). If one is 1 or 2 edits away, the form shows "Did you mean sara@gmail.com?" with a **Use it** button. Real domains that look similar (`mail.com`, `ymail.com`, …) are on an allow list, so they are never "corrected". The suggestion never blocks sending. |
+| Email typo check | After a valid email loses focus, `suggestEmail()` compares its domain with common domains using `editDistance()` (Levenshtein distance). If one is 1 or 2 edits away, the form shows "Did you mean sara@gmail.com?" with a **Use it** button. Real domains that look similar (`mail.com`, `ymail.com`, …) are on an allow list, so they are never "corrected". Short forms in `EMAIL_SHORT_FORMS` are compared too, so `kfupm.edu` (and typos of it) suggests `kfupm.edu.sa`. The suggestion never blocks sending. |
 | Progress | "2 of 4 ready" updates as the visitor types, without showing errors they have not earned yet, and becomes "All set" when every field passes. |
 | Saved name | A name saved in the visitor panel fills an empty name field. |
 

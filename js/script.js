@@ -494,6 +494,9 @@ const validators = {
 // Domains we can suggest, and other real domains that should never trigger a suggestion.
 const EMAIL_SUGGESTIONS = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'live.com', 'kfupm.edu.sa'];
 const KNOWN_EMAIL_DOMAINS = new Set([...EMAIL_SUGGESTIONS, 'mail.com', 'me.com', 'msn.com', 'ymail.com', 'aol.com', 'gmx.com', 'proton.me', 'protonmail.com', 'hotmail.co.uk', 'yahoo.co.uk']);
+// Short forms people often type, mapped to the full domain. "kfupm.edu" is 3 edits from
+// "kfupm.edu.sa", too far for the typo rule, so it is compared directly (typos of it work too).
+const EMAIL_SHORT_FORMS = { 'kfupm.edu': 'kfupm.edu.sa' };
 
 // Levenshtein distance: the fewest single-letter edits that turn one word into the other.
 function editDistance(a, b) {
@@ -515,12 +518,17 @@ function suggestEmail(value) {
   if (at < 1) return '';
   const domain = value.slice(at + 1).toLowerCase();
   if (!domain || KNOWN_EMAIL_DOMAINS.has(domain)) return '';
+  // Each entry is [what the typed domain is compared with, what is suggested].
+  const candidates = [
+    ...EMAIL_SUGGESTIONS.map((suggestion) => [suggestion, suggestion]),
+    ...Object.entries(EMAIL_SHORT_FORMS)
+  ];
   let best = '';
-  let bestDistance = 3; // Only 1 or 2 typos count as "close".
-  EMAIL_SUGGESTIONS.forEach((candidate) => {
-    const distance = editDistance(domain, candidate);
+  let bestDistance = 3; // Only 0 (a short form), 1 or 2 typos count as "close".
+  candidates.forEach(([lookAlike, suggestion]) => {
+    const distance = editDistance(domain, lookAlike);
     if (distance < bestDistance) {
-      best = candidate;
+      best = suggestion;
       bestDistance = distance;
     }
   });

@@ -323,7 +323,7 @@ window.portfolioI18n = (() => {
       'path.curious.action1': 'تعلّم شي جديد',
       'path.curious.action2': 'جرّب بحث الأدوات',
       'repos.marker': 'مباشر من GitHub',
-      'repos.title': 'وباقي الأشياء اللي أشتغل عليها.',
+      'repos.title': 'اللي قاعد أبنيه الحين.',
       'repos.lead': 'القائمة تجي من واجهة GitHub البرمجية، فهي دايم محدّثة.',
       'repos.filterLabel': 'صفّي المستودعات حسب النوع',
       'repos.all': 'الكل',
