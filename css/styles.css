@@ -209,6 +209,44 @@ button:disabled { cursor: default; }
 .portfolio-window__canvas::before { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)), url('../assets/images/liquid-light.svg') center / cover; }
 .portfolio-window__canvas > span { z-index: 1; font-size: clamp(40px, 6.4vw, 90px); line-height: .88; letter-spacing: -.07em; text-align: center; }
 .portfolio-window__canvas small { position: absolute; bottom: 20px; inset-inline-start: 22px; font-size: 6px; letter-spacing: .1em; }
+/* Live GitHub repositories: filter chips, a sort menu and a card grid. */
+.repos { margin-top: 112px; padding-top: 32px; border-top: 1px solid var(--line); }
+.repos__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+.repos__eyebrow { color: var(--accent); margin-bottom: 16px; }
+.repos__title { font-size: clamp(34px, 4vw, 52px); line-height: 1.05; font-weight: 300; letter-spacing: -.05em; }
+.repos__lead { max-width: 300px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.repos__controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 40px; margin-top: 40px; }
+.chip__count { margin-inline-start: 4px; font-size: 10px; opacity: .75; font-variant-numeric: tabular-nums; }
+.chip__count:empty { display: none; }
+.repos__sort { margin-bottom: 0; min-width: 200px; }
+.repos__sort select { width: 100%; padding: 10px 28px 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.3'/%3E%3C/svg%3E") no-repeat right center; font-size: 13px; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.repos__sort select:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 4px; }
+.repos__sort option { color: var(--text); background: var(--bg); }
+html[dir="rtl"] .repos__sort select { padding: 10px 0 10px 28px; background-position: left center; }
+.repos__summary { min-height: 1.6em; margin-top: 24px; font-size: 11px; color: var(--muted); }
+.repos__loading, .repo-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.repo-skeleton { min-height: 220px; border: 1px solid var(--line); background: linear-gradient(90deg, var(--surface) 25%, var(--accent-soft) 50%, var(--surface) 75%) 0 0 / 300% 100%; animation: shimmer 1.4s linear infinite; }
+.repo { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 24px; border: 1px solid var(--line); background: var(--surface); transition: border-color .4s, transform .8s var(--ease); }
+.repo:hover { border-color: var(--accent); transform: translateY(-4px); }
+.repo__top { display: flex; justify-content: space-between; gap: 12px; font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+.repo__category { color: var(--accent); text-transform: uppercase; }
+.repo__name { margin-top: 8px; font-size: 24px; line-height: 1.2; font-weight: 400; letter-spacing: -.035em; }
+.repo__link { display: inline-flex; align-items: baseline; gap: 10px; overflow-wrap: anywhere; }
+.repo__link:hover { color: var(--accent); }
+.repo__link > .directional-arrow { font-size: 16px; color: var(--accent); }
+.repo__slug { font-size: 10px; color: var(--muted); overflow-wrap: anywhere; }
+.repo__description { flex: 1; font-size: 13px; line-height: 1.65; color: var(--muted); }
+.repo__description.is-placeholder { font-style: italic; }
+.repo__meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11px; color: var(--muted); }
+.repo__language { display: inline-flex; align-items: center; gap: 6px; }
+.repo__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot, currentColor); }
+.repo__homepage { padding: 0; gap: 12px; }
+.repos__error { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 16px; padding: 40px clamp(24px, 5vw, 48px); border: 1px solid var(--line); background: var(--surface); }
+.repos__error-title { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.2; letter-spacing: -.04em; }
+.repos__error-hint { font-size: 13px; color: var(--muted); }
+.repos__error .pill { margin-top: 8px; }
+.repos__empty { margin-top: 16px; }
+.repos__note { min-height: 1.6em; margin-top: 16px; font-size: 11px; color: var(--muted); }
 .work-footnote { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--line); }
 .work-footnote p { font-size: 13px; color: var(--muted); }
 
@@ -346,6 +384,7 @@ dialog::backdrop { background: rgba(0,0,0,.8); }
   .skills-intro h2 { font-size: 42px; }
   .phone-composition { gap: 26px; }
   .project__visual-index { display: none; }
+  .repos__loading, .repo-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project__visual-bottom { max-width: 42%; font-size: 7px; }
 }
 @media (max-width: 700px) {
@@ -403,6 +442,14 @@ dialog::backdrop { background: rgba(0,0,0,.8); }
   .portfolio-window__bar { padding: 12px; font-size: 5px; }
   .portfolio-window__canvas > span { font-size: 10vw; }
   .portfolio-window__canvas small { font-size: 4px; bottom: 12px; inset-inline-start: 12px; }
+  .repos { margin-top: 72px; }
+  .repos__head { display: block; }
+  .repos__lead { margin-top: 16px; }
+  .repos__controls { margin-top: 28px; }
+  .repos__sort { width: 100%; }
+  .repos__loading, .repo-list { grid-template-columns: 1fr; }
+  .repo-skeleton { min-height: 160px; }
+  .repos__sort select { font-size: 16px; }
   .work-footnote { margin-top: 40px; flex-direction: column; align-items: flex-start; gap: 20px; }
   .skills-layout { grid-template-columns: 1fr; gap: 40px; }
   .skills-intro h2 { font-size: 44px; }
@@ -483,6 +530,11 @@ html[dir="rtl"] .visitor__title { line-height: 1.5; }
 html[dir="rtl"] .visitor__lead, html[dir="rtl"] .visitor-path__text { font-size: 16px; line-height: 1.85; }
 html[dir="rtl"] .visitor-role__label, html[dir="rtl"] .visitor-stats dt, html[dir="rtl"] .visitor-forget__status { font-size: 13px; }
 html[dir="rtl"] .visitor-path__title, html[dir="rtl"] .visitor-known__hello { font-size: 22px; line-height: 1.6; }
+html[dir="rtl"] .repos__title { line-height: 1.45; }
+html[dir="rtl"] .repos__lead, html[dir="rtl"] .repo__description, html[dir="rtl"] .repos__error-hint { font-size: 15px; line-height: 1.8; }
+html[dir="rtl"] .repos__summary, html[dir="rtl"] .repos__note, html[dir="rtl"] .repo__top, html[dir="rtl"] .repo__meta, html[dir="rtl"] .chip__count { font-size: 13px; }
+html[dir="rtl"] .repos__sort select { font-size: 16px; }
+html[dir="rtl"] .repo__category { text-transform: none; }
 html[dir="rtl"] .footer-wordmark { line-height: 1.5; }
 html[dir="rtl"] .footer-bottom { font-size: 12px; }
 html[dir="rtl"] .lightbox__btn, html[dir="rtl"] .lightbox__figure figcaption { font-size: 15px; }
