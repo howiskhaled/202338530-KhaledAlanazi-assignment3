@@ -17,3 +17,7 @@ dist/
 
 # Local design review artifacts
 .preview/
+
+# AI evidence (submitted on Blackboard, never committed)
+*-ai-evidence/
+*-ai-evidence.zip

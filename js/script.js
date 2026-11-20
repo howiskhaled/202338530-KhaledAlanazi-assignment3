@@ -162,13 +162,13 @@ function initMobileMenu() {
 }
 
 const mizanytiSlides = [
-  { src: 'assets/images/mizanyti-overview-en.jpg' },
-  { src: 'assets/images/mizanyti-activity-en.jpg' },
-  { src: 'assets/images/mizanyti-insights-en.jpg' },
-  { src: 'assets/images/mizanyti-plan-en.jpg' },
-  { src: 'assets/images/mizanyti-overview-ar.jpg' },
-  { src: 'assets/images/mizanyti-overview-ar-dark.jpg' },
-  { src: 'assets/images/mizanyti-activity-ar-dark.jpg' }
+  { src: 'assets/images/mizanyti-overview-en.webp' },
+  { src: 'assets/images/mizanyti-activity-en.webp' },
+  { src: 'assets/images/mizanyti-insights-en.webp' },
+  { src: 'assets/images/mizanyti-plan-en.webp' },
+  { src: 'assets/images/mizanyti-overview-ar.webp' },
+  { src: 'assets/images/mizanyti-overview-ar-dark.webp' },
+  { src: 'assets/images/mizanyti-activity-ar-dark.webp' }
 ];
 
 function initGallery() {

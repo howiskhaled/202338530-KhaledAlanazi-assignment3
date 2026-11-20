@@ -1,18 +1,15 @@
 /* Warm editorial color: sage, terracotta and amber, with a monochrome portrait. */
+/* Fonts are subset to the characters this site uses (Latin for Inter, Arabic and Latin for Tajawal). */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('../assets/fonts/InterVariable.woff2') format('woff2');
+  src: url('../assets/fonts/Inter-Latin.woff2') format('woff2');
 }
-@font-face { font-family: 'Tajawal'; font-style: normal; font-weight: 400; font-display: swap; src: url('../assets/fonts/Tajawal-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Tajawal'; font-style: normal; font-weight: 300; font-display: swap; src: url('../assets/fonts/Tajawal-Light.ttf') format('truetype'); }
+@font-face { font-family: 'Tajawal'; font-style: normal; font-weight: 400; font-display: swap; src: url('../assets/fonts/Tajawal-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Tajawal'; font-style: normal; font-weight: 300; font-display: swap; src: url('../assets/fonts/Tajawal-Light.woff2') format('woff2'); }
 :root {
-  --color-obsidian: #000;
-  --color-paper: #fff;
-  --color-inkstone: #181818;
-  --color-felt-gray: #6d6d6d;
   --bg: #fff9f2;
   --text: #27392d;
   --muted: #686457;
@@ -114,7 +111,7 @@ button:disabled { cursor: default; }
 .hero__bottom { position: absolute; bottom: 32px; left: var(--gutter); right: var(--gutter); display: flex; align-items: center; gap: 32px; }
 .scroll-cue { position: relative; width: 88px; height: 88px; flex: 0 0 88px; }
 .scroll-cue__ring { width: 100%; height: 100%; animation: rotate 30s linear infinite; }
-.scroll-cue text { fill: currentColor; font-family: var(--font); font-size: 8.7px; letter-spacing: 1.8px; }
+.scroll-cue text { fill: currentColor; font-family: var(--font); font-size: 17.4px; letter-spacing: 3.6px; }
 .scroll-cue__arrow { position: absolute; inset: 0; display: grid; place-items: center; font-size: 28px; font-weight: 300; transition: transform .8s var(--ease); }
 .scroll-cue:hover .scroll-cue__arrow { transform: translateY(5px); }
 .hero__signature { font-size: 12px; line-height: 1.5; }
@@ -498,7 +495,7 @@ html[dir="rtl"] .hero h1 { font-size: clamp(76px, 12.2vw, 184px); line-height: 1
 html[dir="rtl"] .hero__signature { font-size: 15px; line-height: 1.7; }
 html[dir="rtl"] .hero__edition { font-size: 12px; }
 html[dir="rtl"] .motion-toggle { font-size: 13px; }
-html[dir="rtl"] .scroll-cue text { letter-spacing: 0; font-size: 11px; }
+html[dir="rtl"] .scroll-cue text { letter-spacing: 0; font-size: 22px; }
 html[dir="rtl"] .statement { line-height: 1.45; }
 html[dir="rtl"] .section-heading h2 { line-height: 1.25; }
 html[dir="rtl"] .contact-title { line-height: 1.35; }
