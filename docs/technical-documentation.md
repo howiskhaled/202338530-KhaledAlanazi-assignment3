@@ -331,7 +331,18 @@ Connecting a real delivery service is separate work; do not change the form's co
 
 ## Verification
 
-VERIFICATION_A3
+**Assignment 3 checks.** Run by Claude Code with scripts in the Claude desktop app's built-in browser (Chromium), served locally, in English and Arabic, light and dark mode, at 1280 px and 375 px.
+
+- Store: values survive a reload; a hand-edited invalid value falls back to its default; "Forget everything about me" clears name, visitor type, filter, sort and history, and the confirmation disappears after the next choice.
+- Visitor name: empty, 1 letter, `Sara2` and `Sa--ra` each show their own message; `  sara   al-otaibi ` is saved as `sara al-otaibi`; the About greeting becomes "GOOD AFTERNOON, SARA AL-OTAIBI. I’M KHALED." and the Arabic greeting keeps the Latin name in the right place.
+- Visitor type: each chip shows its own title, text and links; pressing it again clears it; "Open my coursework" sets the GitHub filter to Coursework (2 of 4) and scrolls there.
+- Timer: counts up each second, the visit counter does not change on reload in the same session, and the total is saved every 15 seconds.
+- GitHub: the list loads live (4 repositories: Assignment 1, Assignment 2, Course register, Team8 mall hub, grouped 2 coursework, 1 personal, 1 team); all five sort orders give the expected order; filter and sort survive a reload; a faked rate limit shows "GitHub needs a short break." and "It will answer again in 25 minutes."; a faked network error shows the failure message; "Try again" recovers; a faked HTTP 500 with an older saved list shows that list with the "copy saved 1 hour ago" note.
+- Form: an empty submit shows four errors and focuses the name; `gmial.com` and `outlok.com` get suggestions and **Use it** fixes the address; `mail.com`, `ymail.com` and `company.sa` get none; the counter goes from "1 of 4 ready" to "All set"; the success message matches the topic; everything switches to Arabic.
+- Assignment 2 features still work: toolkit search, empty state and reset; gallery navigation with WebP screenshots; Wikipedia article loading; theme toggle.
+- Layout: no horizontal scrolling at 375 px; dark mode colours checked on the new sections.
+- Lighthouse 12.6 (mobile): performance 99, accessibility 100, best practices 100, SEO 100. Desktop: 100, 97, 100, 100 (see README *Performance results*).
+
 
 **Assignment 2 checks.** These were run by Claude Code in the Claude desktop app's built-in browser (a Chromium-based browser), served with `python3 -m http.server`. I have not yet tested other browsers, and a real phone is still to do.
 
