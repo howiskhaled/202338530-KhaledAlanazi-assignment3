@@ -20,6 +20,7 @@
   <script src="js/state.js" defer=""></script>
   <script src="js/script.js" defer=""></script>
   <script src="js/visitor.js" defer=""></script>
+  <script src="js/github.js" defer=""></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a><p id="language-status" class="sr-only" role="status"></p>
@@ -103,6 +104,22 @@
             </a>
             <div class="project__details"><div><p class="project__status" data-i18n="portfolio.status">LIVE — YOU’RE LOOKING AT IT</p><h3 data-i18n="portfolio.title">A space of my own.</h3><p class="project__category" data-i18n="portfolio.category">Web development / Personal portfolio</p></div><div class="project__description"><p data-i18n="portfolio.description">A home for the things I’m building and the person I’m becoming. A responsive, accessible portfolio made with the fundamentals: HTML, CSS and a little JavaScript.</p><ul class="tags" aria-label="Portfolio technologies" data-i18n-aria-label="portfolio.technologies"><li dir="auto">HTML</li><li dir="auto">CSS</li><li dir="auto">JavaScript</li></ul></div></div>
           </article>
+        </div>
+        <!-- Live GitHub repositories with filtering and sorting (js/github.js). -->
+        <div class="repos" id="github" role="region" aria-labelledby="repos-title">
+          <div class="repos__head reveal"><div><p class="eyebrow repos__eyebrow" data-i18n="repos.marker">LIVE FROM GITHUB</p><h3 class="repos__title" id="repos-title" data-i18n="repos.title">Everything else I’m working on.</h3></div><p class="repos__lead" data-i18n="repos.lead">Fetched from the GitHub API, so this list is always up to date.</p></div>
+          <div class="repos__controls reveal">
+            <div class="chip-group" role="group" aria-label="Filter repositories by type" data-i18n-aria-label="repos.filterLabel"><button class="chip" type="button" data-repo-category="all" aria-pressed="true"><span data-i18n="repos.all">All</span> <span class="chip__count" data-repo-count="all"></span></button><button class="chip" type="button" data-repo-category="coursework" aria-pressed="false"><span data-i18n="repos.coursework">Coursework</span> <span class="chip__count" data-repo-count="coursework"></span></button><button class="chip" type="button" data-repo-category="personal" aria-pressed="false"><span data-i18n="repos.personal">Personal</span> <span class="chip__count" data-repo-count="personal"></span></button><button class="chip" type="button" data-repo-category="team" aria-pressed="false"><span data-i18n="repos.team">Team</span> <span class="chip__count" data-repo-count="team"></span></button></div>
+            <div class="field repos__sort"><label for="repo-sort" data-i18n="repos.sortLabel">SORT BY</label><select id="repo-sort"><option value="updated" data-i18n="repos.sort.updated">Recently updated</option><option value="newest" data-i18n="repos.sort.newest">Newest first</option><option value="oldest" data-i18n="repos.sort.oldest">Oldest first</option><option value="name" data-i18n="repos.sort.name">Name, A to Z</option><option value="stars" data-i18n="repos.sort.stars">Most stars</option></select></div>
+          </div>
+          <p class="repos__summary" id="repos-summary" role="status"></p>
+          <div class="repos__loading" id="repos-loading" aria-busy="true"><span class="repo-skeleton" aria-hidden="true"></span><span class="repo-skeleton" aria-hidden="true"></span><span class="repo-skeleton" aria-hidden="true"></span><p class="sr-only" data-i18n="repos.loading">Loading repositories from GitHub…</p></div>
+          <div class="repos__error" id="repos-error" hidden><p class="repos__error-title" id="repos-error-title"></p><p class="repos__error-hint" id="repos-error-hint"></p><button class="pill" type="button" id="repos-retry"><span data-i18n="repos.retry">Try again</span><span aria-hidden="true">↻</span></button></div>
+          <ul class="repo-list" id="repo-list" hidden></ul>
+          <div class="empty-state repos__empty" id="repos-empty" hidden><p class="empty-state__title" data-i18n="repos.emptyTitle">Nothing in this group yet.</p><button class="chip" type="button" id="repos-show-all" data-i18n="repos.showAll">Show all repositories</button></div>
+          <p class="repos__note" id="repos-note"></p>
+          <noscript><p class="repos__note">The GitHub list needs JavaScript. You can see everything on my GitHub profile below.</p></noscript>
+          <template id="repo-template"><li class="repo"><div class="repo__top"><span class="repo__category"></span><span class="repo__updated"></span></div><h4 class="repo__name"><a class="repo__link" target="_blank" rel="noopener noreferrer"><span class="repo__title"></span><span aria-hidden="true" class="directional-arrow">↗</span></a></h4><p class="repo__slug" dir="ltr"></p><p class="repo__description" dir="auto"></p><ul class="repo__meta"><li class="repo__language"><span class="repo__dot" aria-hidden="true"></span><span class="repo__language-name"></span></li><li class="repo__stars"></li></ul><a class="text-link repo__homepage" target="_blank" rel="noopener noreferrer" hidden><span class="repo__homepage-label"></span><span aria-hidden="true" class="directional-arrow">↗</span></a></li></template>
         </div>
         <div class="work-footnote reveal"><p data-i18n="work.more">There’s always something in the works.</p><a class="pill" href="https://github.com/howiskhaled" target="_blank" rel="noopener noreferrer"><span data-i18n="work.github">More on GitHub</span><span aria-hidden="true" class="directional-arrow">↗</span></a></div>
       </div>
