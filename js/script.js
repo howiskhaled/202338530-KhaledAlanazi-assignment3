@@ -483,23 +483,74 @@ function initCuriosity() {
   }
 }
 
+// Each validator returns '' when the value is fine, or the key of the error message.
 const validators = {
   name: (value) => value.length >= 2 ? '' : 'error.name',
-  email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'error.email',
+  email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) ? '' : 'error.email',
+  topic: (value) => value ? '' : 'error.topic',
   message: (value) => value.length >= 10 ? '' : 'error.message'
 };
+
+// Domains we can suggest, and other real domains that should never trigger a suggestion.
+const EMAIL_SUGGESTIONS = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'live.com', 'kfupm.edu.sa'];
+const KNOWN_EMAIL_DOMAINS = new Set([...EMAIL_SUGGESTIONS, 'mail.com', 'me.com', 'msn.com', 'ymail.com', 'aol.com', 'gmx.com', 'proton.me', 'protonmail.com', 'hotmail.co.uk', 'yahoo.co.uk']);
+
+// Levenshtein distance: the fewest single-letter edits that turn one word into the other.
+function editDistance(a, b) {
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    const current = [i];
+    for (let j = 1; j <= b.length; j += 1) {
+      const substitution = previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1);
+      current[j] = Math.min(previous[j] + 1, current[j - 1] + 1, substitution);
+    }
+    previous = current;
+  }
+  return previous[b.length];
+}
+
+// "sara@gmial.com" → "sara@gmail.com". Returns '' when the domain looks right or nothing is close.
+function suggestEmail(value) {
+  const at = value.lastIndexOf('@');
+  if (at < 1) return '';
+  const domain = value.slice(at + 1).toLowerCase();
+  if (!domain || KNOWN_EMAIL_DOMAINS.has(domain)) return '';
+  let best = '';
+  let bestDistance = 3; // Only 1 or 2 typos count as "close".
+  EMAIL_SUGGESTIONS.forEach((candidate) => {
+    const distance = editDistance(domain, candidate);
+    if (distance < bestDistance) {
+      best = candidate;
+      bestDistance = distance;
+    }
+  });
+  return best ? `${value.slice(0, at + 1)}${best}` : '';
+}
 
 function initContactForm() {
   const form = document.getElementById('contact-form');
   const status = document.getElementById('form-status');
+  const progress = document.getElementById('form-progress');
   const fieldNames = Object.keys(validators);
+  const field = (fieldName) => document.getElementById(fieldName);
   let hasPreview = false;
+
+  // The success message changes with the topic the visitor picked.
   function renderPreview() {
-    const name = document.getElementById('name').value.trim().split(/\s+/)[0];
-    status.textContent = i18n.t('form.success', { name: `\u2068${name}\u2069` });
+    const name = field('name').value.trim().split(/\s+/)[0];
+    status.textContent = i18n.t(`form.success.${field('topic').value}`, { name: `⁨${name}⁩` });
   }
+
+  // Counts the fields that already pass, without showing errors the visitor has not earned yet.
+  function renderProgress() {
+    const ready = fieldNames.filter((fieldName) => !validators[fieldName](field(fieldName).value.trim())).length;
+    progress.textContent = ready === 0 ? ''
+      : ready === fieldNames.length ? i18n.t('form.progressDone')
+      : i18n.t('form.progress', { ready: i18n.number(ready), total: i18n.number(fieldNames.length) });
+  }
+
   // A live hint tells the visitor how far the message is from the minimum length.
-  const messageInput = document.getElementById('message');
+  const messageInput = field('message');
   const messageHint = document.getElementById('message-hint');
   const MIN_MESSAGE = 10;
   function renderMessageHint() {
@@ -509,22 +560,47 @@ function initContactForm() {
       : i18n.t('form.hintOk');
   }
   messageInput.addEventListener('input', renderMessageHint);
+
+  // Email typo check: only offered once the address is valid, and never blocks sending.
+  const emailInput = field('email');
+  const suggestion = document.getElementById('email-suggestion');
+  let suggestedEmail = '';
+  function renderSuggestion() {
+    const value = emailInput.value.trim();
+    suggestedEmail = validators.email(value) ? '' : suggestEmail(value);
+    suggestion.hidden = !suggestedEmail;
+    document.getElementById('email-suggestion-text').textContent = suggestedEmail
+      ? i18n.t('form.suggestion', { email: `⁦${suggestedEmail}⁩` }) : '';
+  }
+  emailInput.addEventListener('blur', renderSuggestion);
+  document.getElementById('email-suggestion-apply').addEventListener('click', () => {
+    emailInput.value = suggestedEmail;
+    renderSuggestion();
+    validateField('email');
+    renderProgress();
+    emailInput.focus();
+  });
+
   function validateField(fieldName) {
-    const input = document.getElementById(fieldName);
+    const input = field(fieldName);
     const message = validators[fieldName](input.value.trim());
     document.getElementById(`${fieldName}-error`).textContent = message ? i18n.t(message) : '';
     input.setAttribute('aria-invalid', String(Boolean(message)));
     return !message;
   }
   fieldNames.forEach((fieldName) => {
-    const input = document.getElementById(fieldName);
+    const input = field(fieldName);
     input.addEventListener('blur', () => { if (input.value.trim()) validateField(fieldName); });
-    input.addEventListener('input', () => {
+    input.addEventListener(input.tagName === 'SELECT' ? 'change' : 'input', () => {
       status.textContent = '';
       hasPreview = false;
-      if (input.getAttribute('aria-invalid') === 'true') validateField(fieldName);
+      if (input.getAttribute('aria-invalid') === 'true' || input.tagName === 'SELECT') validateField(fieldName);
+      if (fieldName === 'email' && !suggestion.hidden) renderSuggestion();
+      renderProgress();
     });
   });
+
+  // Submitting runs every check in order; the first field with a problem gets focus.
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     status.textContent = '';
@@ -532,19 +608,35 @@ function initContactForm() {
     const results = fieldNames.map((fieldName) => ({ fieldName, valid: validateField(fieldName) }));
     const invalid = results.find((result) => !result.valid);
     if (invalid) {
-      document.getElementById(invalid.fieldName).focus();
+      field(invalid.fieldName).focus();
       return;
     }
+    renderSuggestion();
     hasPreview = true;
     renderPreview();
   });
+
+  // A name saved in the visitor panel fills the empty name field.
+  function prefillName() {
+    const nameInput = field('name');
+    if (!nameInput.value.trim() && store.get('name')) {
+      nameInput.value = store.get('name');
+      renderProgress();
+    }
+  }
+  store.subscribe((changed) => { if (changed.includes('name')) prefillName(); });
+
   document.addEventListener('languagechange', () => {
     fieldNames.forEach(fieldName => {
-      if (document.getElementById(fieldName).getAttribute('aria-invalid') === 'true') validateField(fieldName);
+      if (field(fieldName).getAttribute('aria-invalid') === 'true') validateField(fieldName);
     });
     if (hasPreview) renderPreview();
     renderMessageHint();
+    renderSuggestion();
+    renderProgress();
   });
+  prefillName();
+  renderProgress();
   form.classList.add('is-ready');
 }
 
